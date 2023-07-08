@@ -5,10 +5,9 @@ import colors from '../styles/colors';
 import ScrollTracking from '../components/tracking/scrollTracking';
 
 const SelectComponent = () => {
-    const [selectedValue, setSelectedValue] = useState('');
+    const [selectedValue, setSelectedValue] = useState('10');
 
     const options = [
-        { label: 'Seleccione o salir', value: '' },
         { label: 'Hoy', value: '10' },
         { label: '08/06/2023', value: '9' },
         { label: '07/06/2023', value: '8' },
@@ -23,19 +22,13 @@ const SelectComponent = () => {
     ];
 
     const handleValueChange = (itemValue) => {
-        if (itemValue != '') {
-            setSelectedValue(itemValue);
-            console.log('Opción seleccionada:', itemValue);
-        } else {
-            console.log('Opcion seleccionada:', selectedValue);
-        }
-
-
+        setSelectedValue(itemValue);
+        console.log('Opción seleccionada:', itemValue);
         // Agregar lógica adicional para cerrar el modal si es necesario
     };
 
     return (
-        <View style={{flex:1}}>
+        <View style={{ flex: 1 }}>
             <View style={styles.pickerContainer}>
                 <View style={styles.container}>
                     <Picker
@@ -58,8 +51,8 @@ const SelectComponent = () => {
                     </Picker>
                 </View>
             </View>
-            <View style={{flex:1, backgroundColor:colors.WHITE}}>
-                <ScrollTracking/>
+            <View style={{ flex: 1, backgroundColor: colors.WHITE }}>
+                <ScrollTracking />
             </View>
         </View>
     );
