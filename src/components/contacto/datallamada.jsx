@@ -38,7 +38,7 @@ const CallItem = ({ type, duration, date, contact }) => {
                         <Text style={styles.contactName}>{contact.name === null ? 'Desconocido' : contact.name}</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                             <Text style={styles.callInfo}>
-                                {type === 1 ? 'Llamada entrante' : type === 2 ? 'Llamada saliente' : type === 3 ? 'Llamada perdida' : type === 4 ? 'llamada rechazada' : ''}
+                                {type === 1 ? 'Llamada entrante' : type === 2 ? 'Llamada saliente' : type === 3 ? 'Llamada perdida' : type === 5 ? 'Llamada rechazada' : ''}
                             </Text>
                             <Text style={styles.contactNumber}>{contact.number}</Text>
                         </View>

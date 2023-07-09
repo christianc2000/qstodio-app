@@ -4,14 +4,57 @@ import MapView from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import colors from '../styles/colors';
 import Select from '../components/selectTracking';
+import axios from 'react-native-axios';
+import { API_URL } from '../api';
+
+
+const getCurrentLocation = () => {
+    Geolocation.getCurrentPosition(
+        (position) => {
+            const { latitude, longitude } = position.coords;
+            // Aquí puedes hacer lo que necesites con la ubicación (enviarla a la base de datos, etc.)
+            console.log('Ubicación actual:', latitude, longitude);
+        },
+        (error) => {
+            console.log('Error al obtener la ubicación:', error);
+        },
+        {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 10000,
+        }
+    );
+};
 
 const Tracking = ({ navigation }) => {
     const [region, setRegion] = useState(null);
     const [loading, setLoading] = useState(true);
 
+
     useEffect(() => {
         requestLocationPermission();
     }, []);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            getCurrentLocation();
+        }, 10000);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    const sendLocationToDatabase = (latitude, longitude) => {
+        axios.post(`${API_URL}/token-infante`, {
+            latitude: latitude,
+            longitude: longitude,
+        })
+            .then((response) => {
+                console.log('Ubicación enviada exitosamente a la base de datos:', response.data);
+            })
+            .catch((error) => {
+                console.log('Error al enviar la ubicación a la base de datos:', error);
+            });
+    };
 
     const requestLocationPermission = async () => {
         try {

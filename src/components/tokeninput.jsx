@@ -3,12 +3,12 @@ import { View, TextInput, StyleSheet } from 'react-native';
 import colors from '../styles/colors';
 
 const TokenInput = () => {
-    const [token, setToken] = useState('');
+    const [tokenArray, setTokenArray] = useState(Array(6).fill(''));
 
     const handleTokenChange = (value, index) => {
-        // Aquí puedes manejar el cambio de cada campo de entrada de token
-        // Puedes almacenar los valores de cada campo en un arreglo o cualquier otra lógica que necesites
-        console.log(`Token ${index + 1}: ${value}`);
+        const newTokenArray = [...tokenArray];
+        newTokenArray[index] = value;
+        setTokenArray(newTokenArray);
     };
 
     return (
@@ -18,7 +18,7 @@ const TokenInput = () => {
                     <TextInput
                         key={index}
                         style={styles.input}
-                        value={token[index]}
+                        value={tokenArray[index]}
                         onChangeText={(value) => handleTokenChange(value, index)}
                         keyboardType="numeric"
                         maxLength={1}

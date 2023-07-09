@@ -18,7 +18,6 @@ const SelectComponent = () => {
         { label: '02/06/2023', value: '3' },
         { label: '01/06/2023', value: '2' },
         { label: '31/05/2023', value: '1' },
-        // Resto de las opciones
     ];
 
     const handleValueChange = (itemValue) => {

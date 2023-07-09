@@ -41,13 +41,13 @@ class MenuWithContent extends PureComponent {
             <View style={styles.container}>
                 <View style={styles.menu}>
                     <TouchableOpacity
-                        style={[styles.option, selectedOption === 'Option 1' && styles.selectedOption]}
+                        style={[styles.option,{borderTopLeftRadius:10, borderBottomLeftRadius:10}, selectedOption === 'Option 1' && styles.selectedOption]}
                         onPress={() => this.handleOptionPress('Option 1')}
                     >
                         <Text style={styles.optionText}>Registros</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={[styles.option, selectedOption === 'Option 2' && styles.selectedOption]}
+                        style={[styles.option,{borderTopRightRadius:10, borderBottomRightRadius:10}, selectedOption === 'Option 2' && styles.selectedOption]}
                         onPress={() => this.handleOptionPress('Option 2')}
                     >
                         <Text style={styles.optionText}>Llamadas</Text>
@@ -91,11 +91,13 @@ class MenuWithContent extends PureComponent {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 25,
+        paddingHorizontal: 25,
+        paddingTop:20,
+        
     },
     menu: {
         flexDirection: 'row',
-        marginBottom: 20,
+       
     },
     option: {
         paddingVertical: 8,
@@ -115,7 +117,8 @@ const styles = StyleSheet.create({
     },
     content: {
         flex: 1,
-        paddingBottom: 20,
+        marginTop:10,
+      
     },
     texto: {
         color: colors.BLACK,
@@ -126,7 +129,7 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         backgroundColor: '#fff',
         borderRadius: 4,
-        paddingVertical: 12,
+        paddingVertical: 6,
         paddingHorizontal: 16,
         justifyContent: 'center',
         shadowColor: '#000',
@@ -138,6 +141,7 @@ const styles = StyleSheet.create({
     textContainer: {
         flex: 1,
         flexDirection: 'row',
+        
         justifyContent: 'space-between',
     },
     textoCard: {
