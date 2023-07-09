@@ -1,13 +1,14 @@
 import * as React from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import LoginScreen from '../screen/loginScreen';
-import InicioScreen from '../screen/inicioScreen';
-import ContactoScreen from '../screen/contactoScreen';
-import TrackingScreen from '../screen/trackingScreen';
-
+import Login from '../screen/Login';
+import Inicio from '../screen/Inicio';
+import Contacto from '../screen/Contacto';
+import Tracking from '../screen/Tracking';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import colors from '../styles/colors';
+import { API_URL } from '../api';
+import axios from 'axios';
 
 const Stack = createNativeStackNavigator();
 
@@ -35,22 +36,36 @@ const RootNavigation = () => {
   React.useEffect(() => {
     checkLoginStatus();
   }, []);
-
+  //verificamos si el token aún está activo para que no nos pida ir al login, sino directamente podamos ingresar
   const checkLoginStatus = async () => {
     try {
       const token = await AsyncStorage.getItem('accessToken');
-      if (token) {
-        setAccessToken(token);
-        setIsLoggedIn(true);
+      if (token != null) {
+        const response = await axios.post(`${API_URL}verify-token`, {
+          token: token
+        });
+        console.log("RESPONSE: " + response.data);
+        if (response.status === 200) {
+          //setAccessToken(token);
+          setIsLoggedIn(true);
+        } else {
+          // El token no está activo, lo eliminamos del AsyncStorage
+          await AsyncStorage.removeItem('accessToken');
+          setIsLoggedIn(false);
+        }
       }
     } catch (error) {
       console.log('Error retrieving access token:', error);
     }
   };
 
+
   const handleLogin = async (token) => {
     try {
+
       await AsyncStorage.setItem('accessToken', token);
+      console.log("SE GUARDÓ CORRECTAMENTE EL TOKEN EN EL ASYNCSTORAGE");
+      console.log(token);
       setAccessToken(token);
       setIsLoggedIn(true);
     } catch (error) {
@@ -77,14 +92,16 @@ const RootNavigation = () => {
         {!isLoggedIn ? (
           <Stack.Screen name="Login" options={{ headerShown: false }}>
             {({ navigation }) => (
-              <LoginScreen onLogin={handleLogin} navigation={navigation} />
+              <Login onLogin={handleLogin} navigation={navigation} />
             )}
           </Stack.Screen>
         ) : (
           <>
-            <Stack.Screen name="Inicio" component={InicioScreen} />
-            <Stack.Screen name="Contacto" component={ContactoScreen} />
-            <Stack.Screen name="Tracking" component={TrackingScreen} />
+            <Stack.Screen name="Inicio">
+              {() => <Inicio onLogout={handleLogout} />}
+            </Stack.Screen>
+            <Stack.Screen name="Contacto" component={Contacto} />
+            <Stack.Screen name="Tracking" component={Tracking} />
           </>
         )}
       </Stack.Navigator>

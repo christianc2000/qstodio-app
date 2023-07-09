@@ -9,8 +9,8 @@ import { API_URL } from '../api';
 import axios, { Axios } from 'axios';
 import { useNavigation } from '@react-navigation/native';
 
-const Login = ({ onLogin }) => {
-    const navigation = useNavigation();
+const Login = ({ onLogin, navigation }) => {
+
     const [tokenArray, setTokenArray] = useState(Array(6).fill(''));
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -34,41 +34,49 @@ const Login = ({ onLogin }) => {
 
         const token = tokenArray.join('');
         console.log('Token ingresado:', token);
-        try {
-            const response = await axios.post(`${API_URL}register-token-kid`, {
-                token: token
-            });
+        //LLAMAMOS A LA API PARA VERIFICAR QUE EL TOKEN ESTÉ CORRECTO Y NOS PERMITA EL ACCESO, Y ESTO LUEGO SE GUARDARÁ EN ASYNC LOCALSTORAGE PARA QUE NO SEA NECESARIO ESTAR COLOCANDO EL TOKEN HASTA QUE SE DESHABILITE EL TOKEN
+        if (token.length > 0) {
+            try {
+                const response = await axios.post(`${API_URL}register-token-kid`, {
+                    token: token
+                });
 
-            console.log(response.data);
+                console.log(response);
 
-            if (response.status === 200) {
-                // Llamar a la función onLogin y pasar el token
-                onLogin(token);
-                console.log(response.data);
-                // Redirigir al usuario a la pantalla de Inicio
-                navigation.navigate('Inicio');
-            } else {
-                setErrorMessage('Error al iniciar sesión. Por favor, verifica el token.');
-            }
-        } catch (error) {
-            console.log(error);
+                if (response.status === 200) {
+                    // Llamar a la función onLogin y pasar el token
+                    onLogin(token);
+                    console.log(response.data);
+                    // Redirigir al usuario a la pantalla de Inicio
+                    console.log("ANTES DEL NAVIGATION");
+                   // navigation.navigate('Inicio');
+                    console.log("DESPUÉS DEL NAVIGATION");
+                } else {
+                    setErrorMessage('Error al iniciar sesión. Por favor, verifica el token.');
+                }
+            } catch (error) {
+                console.log("ERROR EN LA PANTALLA LOGIN: " + error);
 
-            if (error.response) {
-                const { status, data } = error.response;
+                if (error.response) {
+                    const { status, data } = error.response;
 
-                if (status === 404) {
-                    setErrorMessage('Token no encontrado. Por favor, verifica el token.');
-                } else if (status === 400) {
-                    setErrorMessage('Token inválido. Por favor, intenta nuevamente.');
-                } else if (status === 409) {
-                    setErrorMessage('Token ya utilizado. Por favor, inténtalo nuevamente.');
+                    if (status === 404) {
+                        setErrorMessage('Token no encontrado. Por favor, verifica el token.');
+                    } else if (status === 400) {
+                        setErrorMessage('Token inválido. Por favor, intenta nuevamente.');
+                    } else if (status === 409) {
+                        setErrorMessage('Token ya utilizado. Por favor, inténtalo nuevamente.');
+                    } else {
+                        setErrorMessage('Error de conexión. Por favor, inténtalo nuevamente.');
+                    }
                 } else {
                     setErrorMessage('Error de conexión. Por favor, inténtalo nuevamente.');
                 }
-            } else {
-                setErrorMessage('Error de conexión. Por favor, inténtalo nuevamente.');
             }
+        } else {
+            console.log("no se guardo correctamente los datos del input del token");
         }
+
 
 
     };

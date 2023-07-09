@@ -80,13 +80,14 @@ const Contacto = ({ navigation }) => {
     const fetchCallHistory = () => {
         CallLog.loadAll()
             .then((callHistory) => {
-                const formattedCallHistory = callHistory.map((call) => {
+                const formattedCallHistory = callHistory.map((call, index) => {
                     const seconds = call.duration;
                     const minutes = Math.floor(seconds / 60);
                     const hours = Math.floor(minutes / 60);
                     const remainingSeconds = seconds % 60;
 
                     return {
+                        id:index+1,
                         ...call,
                         duration: {
                             hours,
