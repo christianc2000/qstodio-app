@@ -69,8 +69,8 @@ const Inicio = ({ onLogout }) => {
     };
 
     const handleContactoNavigate = async () => {
-        const id=  await AsyncStorage.getItem('id_infantes');
-        navigation.navigate('Contacto', {id: id});
+      
+        navigation.navigate('Contacto');
     };
 
     const [isHeaderVisible, setHeaderVisible] = useState(true);

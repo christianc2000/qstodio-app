@@ -6,10 +6,9 @@ import CustomButton from '../components/buttonin';
 import colors from '../styles/colors';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { API_URL } from '../api';
-import axios, { Axios } from 'axios';
+import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import getContactAndGetCall  from '../services/inicializacion';
 
 const Login = ({ onLogin, navigation }) => {
 
@@ -41,20 +40,21 @@ const Login = ({ onLogin, navigation }) => {
             try {
                 const response = await axios.post(`${API_URL}register-token-kid`, {
                     token: token
-                }).then((respon)=>{
-                    console.log('ingresa xdxdxdxd ');
-
-                console.log(response);
+                });
+                console.log('ingresa xdxdxdxd ');
+                console.log(response.data.data.data);
 
                 if (response.status === 200) {
                     // Llamar a la función onLogin y pasar el token
-                    onLogin(token);
-                    
-                    console.log(response.data);
+                    onLogin(token, response.data.data.data.children_id);
+
+                    console.log("new "+response.data.data.data.children_id);
                     // Redirigir al usuario a la pantalla de Inicio
                     console.log("ANTES DEL NAVIGATION");
-                   // navigation.navigate('Inicio');
+                    
                     console.log("DESPUÉS DEL NAVIGATION");
+                    //REALIZAR LA LLAMADA AL MÉTODO DE OBTENCIÓN DE LLAMADAS Y CONTACTOS
+
                 } else {
                     setErrorMessage('Error al iniciar sesión. Por favor, verifica el token.');
                 }
@@ -80,10 +80,7 @@ const Login = ({ onLogin, navigation }) => {
         } else {
             console.log("no se guardo correctamente los datos del input del token");
         }
-
-
-
-    };
+    }
 
 
     const handleInputSubmit = (index) => {

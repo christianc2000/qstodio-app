@@ -10,6 +10,8 @@ import colors from '../styles/colors';
 import { API_URL } from '../api';
 import axios from 'axios';
 
+import getContactAndGetCall from '../services/inicializacion';
+
 const Stack = createNativeStackNavigator();
 
 const myConfig = {
@@ -60,14 +62,17 @@ const RootNavigation = () => {
   };
 
 
-  const handleLogin = async (token) => {
+  const handleLogin = async (token, id) => {
     try {
-
+      console.log('id infante: ' + id);
       await AsyncStorage.setItem('accessToken', token);
+      await AsyncStorage.setItem('id_infantes', id+"");
       console.log("SE GUARDÓ CORRECTAMENTE EL TOKEN EN EL ASYNCSTORAGE");
       console.log(token);
+      console.log('id infante: ', id);
       setAccessToken(token);
       setIsLoggedIn(true);
+      getContactAndGetCall();
     } catch (error) {
       console.log('Error saving access token:', error);
     }
