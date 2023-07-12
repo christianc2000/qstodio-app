@@ -7,14 +7,26 @@ import CardButton from '../components/buttoncard';
 import axios from 'axios';
 import { API_URL } from '../api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import BackgroundTask from 'react-native-background-task';
 
 
 
-const Inicio = ({ onLogout}) => {
+const Inicio = ({ onLogout }) => {
     const navigation = useNavigation();
 
     const handleContactoPress = () => {
         // Lógica para manejar el evento de presionar el botón
+        BackgroundTask.define(async () => {
+            // Aquí puedes realizar las tareas que deseas ejecutar en segundo plano
+
+            // Por ejemplo, puedes llamar a tu función sendImagesToAPI
+            const carpeta = 'Descarga';
+            const childrenid = 'id_del_niño';
+            await sendImagesToAPI(carpeta, childrenid);
+
+            // Importante: Llama a BackgroundTask.finish() cuando hayas terminado
+            BackgroundTask.finish();
+        });
         console.log('Botón presionado');
     };
     const [currentAccessToken, setCurrentAccessToken] = useState();
