@@ -5,111 +5,22 @@ import CallLog from 'react-native-call-log';
 
 import colors from '../styles/colors';
 import MenuWithContent from '../components/contacto/menucontacto';
+import axios from 'axios';
+import { API_URL } from '../api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const Contacto = ({ navigation }) => {
-    const [contacts, setContacts] = useState([]);
-    const [callHistory, setCallHistory] = useState([]);
-
-    useEffect(() => {
-        requestContactsPermission();
-        componentDidMount();
-    }, []);
-
-    const requestContactsPermission = async () => {
-        try {
-            const granted = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-                {
-                    title: 'Contacts',
-                    message: 'This app would like to view your contacts.',
-                    buttonPositive: 'Please accept bare mortal',
-                }
-            );
-            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                fetchContacts();
-            } else {
-                console.log('Contacts permission denied');
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
-    const componentDidMount = async () => {
-        try {
-            const granted = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.READ_CALL_LOG,
-                {
-                    title: 'Call Log Example',
-                    message: 'Access your call logs',
-                    buttonNeutral: 'Ask Me Later',
-                    buttonNegative: 'Cancel',
-                    buttonPositive: 'OK',
-                }
-            )
-            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                fetchCallHistory();
-            } else {
-                console.log('Call Log permission denied');
-            }
-        }
-        catch (e) {
-            console.log(e);
-        }
-    }
-    const fetchContacts = () => {
-        Contacts.getAll()
-            .then((contacts) => {
-                const filteredContacts = contacts
-                    .filter((contact) => contact.phoneNumbers[0]?.number)
-                    .sort((a, b) => a.displayName.localeCompare(b.displayName));
-
-                const formattedContacts = filteredContacts.map((contact, index) => ({
-                    id: index + 1,
-                    name: contact.displayName,
-                    number: contact.phoneNumbers[0]?.number || '',
-                }));
-
-                console.log(formattedContacts);
-                setContacts(formattedContacts);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
-    const fetchCallHistory = () => {
-        CallLog.loadAll()
-            .then((callHistory) => {
-                const formattedCallHistory = callHistory.map((call, index) => {
-                    const seconds = call.duration;
-                    const minutes = Math.floor(seconds / 60);
-                    const hours = Math.floor(minutes / 60);
-                    const remainingSeconds = seconds % 60;
-
-                    return {
-                        id:index+1,
-                        ...call,
-                        duration: {
-                            hours,
-                            minutes,
-                            seconds: remainingSeconds,
-                        },
-                    };
-                });
-
-                console.log("LLAMADAS: ", formattedCallHistory);
-                setCallHistory(formattedCallHistory);
-                // Aquí puedes hacer lo que necesites con el historial de llamadas
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
-
+const Contacto = ({ navigation, route }) => {
+  
+    console.log(route);
+    console.log(AsyncStorage.getItem('id_infantes'));
+    const { id} = route.params;
+    // const id = await AsyncStorage.getItem('id_infantes');
+    axios.post(API_URL+'contact/kid/'+ id)
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <MenuWithContent contacts={contacts} callHistory={callHistory} />
+            {/* <MenuWithContent contacts={contacts} callHistory={callHistory} /> */}
 
         </SafeAreaView>
     );
