@@ -8,6 +8,8 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { API_URL } from '../api';
 import axios, { Axios } from 'axios';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import getContactAndGetCall  from '../services/inicializacion';
 
 const Login = ({ onLogin, navigation }) => {
 
@@ -39,14 +41,15 @@ const Login = ({ onLogin, navigation }) => {
             try {
                 const response = await axios.post(`${API_URL}register-token-kid`, {
                     token: token
-                });
+                }).then((respon)=>{
+                    console.log('ingresa xdxdxdxd ');
 
                 console.log(response);
 
                 if (response.status === 200) {
                     // Llamar a la función onLogin y pasar el token
                     onLogin(token);
-                    sen
+                    
                     console.log(response.data);
                     // Redirigir al usuario a la pantalla de Inicio
                     console.log("ANTES DEL NAVIGATION");
