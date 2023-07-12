@@ -46,7 +46,7 @@ const Login = ({ onLogin, navigation }) => {
                 if (response.status === 200) {
                     // Llamar a la función onLogin y pasar el token
                     onLogin(token);
-                    
+                    sen
                     console.log(response.data);
                     // Redirigir al usuario a la pantalla de Inicio
                     console.log("ANTES DEL NAVIGATION");
